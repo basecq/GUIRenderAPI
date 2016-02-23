@@ -287,6 +287,7 @@ HRESULT CD3DRender::End()
 
 	int numPrims;
 
+
 	switch( m_primType )
 	{
 		case D3DPT_POINTLIST:
