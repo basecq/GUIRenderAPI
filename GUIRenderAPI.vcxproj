@@ -178,6 +178,7 @@
     <ClInclude Include="GUI\CVar.h" />
     <ClInclude Include="GUI\CWindow.h" />
     <ClInclude Include="GUI\Entry.h" />
+    <ClInclude Include="GUI\LogFile.h" />
     <ClInclude Include="GUI\ProgressBarVertical.h" />
     <ClInclude Include="GUI\renderers\CGraphics.h" />
     <ClInclude Include="GUI\renderers\Define.h" />
@@ -187,7 +188,6 @@
     <ClInclude Include="GUI\ScrollbarHorizontal.h" />
     <ClInclude Include="GUI\TrackBar.h" />
     <ClInclude Include="GUI\unistr.h" />
-    <ClInclude Include="LogFile.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -221,6 +221,7 @@
     <ClCompile Include="GUI\CVar.cpp" />
     <ClCompile Include="GUI\CWindow.cpp" />
     <ClCompile Include="GUI\Entry.cpp" />
+    <ClCompile Include="GUI\LogFile.cpp" />
     <ClCompile Include="GUI\ProgressBarVertical.cpp" />
     <ClCompile Include="GUI\renderers\CGraphics.cpp" />
     <ClCompile Include="GUI\renderers\Graphics.cpp" />
@@ -228,7 +229,6 @@
     <ClCompile Include="GUI\ScrollablePane.cpp" />
     <ClCompile Include="GUI\ScrollbarHorizontal.cpp" />
     <ClCompile Include="GUI\TrackBar.cpp" />
-    <ClCompile Include="LogFile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

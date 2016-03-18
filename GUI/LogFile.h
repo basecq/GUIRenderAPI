@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GUI\renderers\Define.h"
-#include "GUI\unistr.h"
+#include "renderers\Define.h"
+#include "unistr.h"
 
 class CLogFile
 {

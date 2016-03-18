@@ -138,14 +138,14 @@
     <ClInclude Include="Graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LogFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GUI\renderers\Texture.h">
       <Filter>GUI\renderers</Filter>
     </ClInclude>
     <ClInclude Include="GUI\renderers\Graphics.h">
       <Filter>GUI\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\LogFile.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -251,14 +251,14 @@
     <ClCompile Include="Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LogFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\renderers\Texture.cpp">
       <Filter>GUI\renderers</Filter>
     </ClCompile>
     <ClCompile Include="GUI\renderers\Graphics.cpp">
       <Filter>GUI\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\LogFile.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

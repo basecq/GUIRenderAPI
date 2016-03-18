@@ -27,10 +27,7 @@ class CScrollablePane;
 
 #include "renderers\CGraphics.h"
 
-#include "unistr.h"
-
-#include "TinyXML\tinyxml.h"
-
+#include "LogFile.h"
 #include "CTexture.h"
 #include "CFont.h"
 
@@ -40,7 +37,7 @@ class CScrollablePane;
 #include "CPos.h"
 #include "CColor.h"
 
-#include <LogFile.h>
+
 #include "CMouse.h"
 #include "CKeyboard.h"
 #include "CElement.h"
