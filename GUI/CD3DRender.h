@@ -1,8 +1,8 @@
 #ifndef _D3DRENDER_H
 #define _D3DRENDER_H
 
-#include <d3d9.h>
 #include "unistr.h"
+#include "renderers\Define.h"
 
 class CD3DFont;
 class CD3DRender;
@@ -24,10 +24,6 @@ class CD3DRender;
 //Vertex Types
 struct d3dfont_s { float x,y,z,rhw; DWORD colour; float tu,tv; };
 typedef struct { float x,y,z,rhw; DWORD colour; } d3dprimitives_s;
-
-//Initialization Macros
-#undef SAFE_RELEASE
-#define SAFE_RELEASE( pInterface ) if( pInterface ) { pInterface->Release(); pInterface = 0; }
 
 class CD3DBaseRender
 {

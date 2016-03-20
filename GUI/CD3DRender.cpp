@@ -55,9 +55,6 @@
 //     }
 //
 
-#include <d3d9.h>
-#include <math.h>
-#include <stdio.h>
 #include <wchar.h>
 #include "CD3DRender.h"
 

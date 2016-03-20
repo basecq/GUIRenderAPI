@@ -42,12 +42,6 @@
     <ClInclude Include="GUI\CCheckBox.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\CColor.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\CD3DRender.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="GUI\CDropDown.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -58,9 +52,6 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI\CFigure.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\CFont.h">
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI\CGUI.h">
@@ -94,9 +85,6 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI\CTextBox.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\CTexture.h">
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI\CTimer.h">
@@ -161,12 +149,6 @@
     <ClCompile Include="GUI\CCheckBox.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="GUI\CColor.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\CD3DRender.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\CDropDown.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -177,9 +159,6 @@
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI\CFigure.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\CFont.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI\CGUI.cpp">
@@ -213,9 +192,6 @@
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI\CTextBox.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\CTexture.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI\CTimer.cpp">
@@ -259,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="GUI\LogFile.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

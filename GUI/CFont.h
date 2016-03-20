@@ -3,14 +3,12 @@
 #include <stdio.h>
 #include <string>
 #include "D3D9.h"
-#include "CColor.h"
 
 class CDialog;
 
 class CFont
 {
 	CDialog *m_pDialog;
-	CColor m_cColors[9];
 
 	ID3DXFont * m_pFont;
 	CRITICAL_SECTION cs;

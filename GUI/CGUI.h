@@ -35,8 +35,6 @@ class CScrollablePane;
 #include "CTimer.h"
 
 #include "CPos.h"
-#include "CColor.h"
-
 
 #include "CMouse.h"
 #include "CKeyboard.h"

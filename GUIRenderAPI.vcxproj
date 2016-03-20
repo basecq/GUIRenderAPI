@@ -76,6 +76,8 @@
     <LibraryPath>D3D9Headers;$(LibraryPath)</LibraryPath>
     <IncludePath>D3D9Headers;$(IncludePath)</IncludePath>
     <ReferencePath>D3D9Headers;$(ReferencePath)</ReferencePath>
+    <OutDir>E:\GTA San Andreas\scripts</OutDir>
+    <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -97,6 +99,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -154,13 +157,10 @@
     <ClInclude Include="GUIRenderAPI.h" />
     <ClInclude Include="GUI\CButton.h" />
     <ClInclude Include="GUI\CCheckBox.h" />
-    <ClInclude Include="GUI\CColor.h" />
-    <ClInclude Include="GUI\CD3DRender.h" />
     <ClInclude Include="GUI\CDropDown.h" />
     <ClInclude Include="GUI\CEditBox.h" />
     <ClInclude Include="GUI\CElement.h" />
     <ClInclude Include="GUI\CFigure.h" />
-    <ClInclude Include="GUI\CFont.h" />
     <ClInclude Include="GUI\CGUI.h" />
     <ClInclude Include="GUI\CKeyboard.h" />
     <ClInclude Include="GUI\CListBox.h" />
@@ -172,7 +172,6 @@
     <ClInclude Include="GUI\CScrollBar.h" />
     <ClInclude Include="GUI\CText.h" />
     <ClInclude Include="GUI\CTextBox.h" />
-    <ClInclude Include="GUI\CTexture.h" />
     <ClInclude Include="GUI\CTimer.h" />
     <ClInclude Include="GUI\CTrackBar.h" />
     <ClInclude Include="GUI\CVar.h" />
@@ -193,17 +192,15 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GUIRenderAPI.cpp" />
     <ClCompile Include="GUI\CButton.cpp" />
     <ClCompile Include="GUI\CCheckBox.cpp" />
-    <ClCompile Include="GUI\CColor.cpp" />
-    <ClCompile Include="GUI\CD3DRender.cpp" />
     <ClCompile Include="GUI\CDropDown.cpp" />
     <ClCompile Include="GUI\CEditBox.cpp" />
     <ClCompile Include="GUI\CElement.cpp" />
     <ClCompile Include="GUI\CFigure.cpp" />
-    <ClCompile Include="GUI\CFont.cpp" />
     <ClCompile Include="GUI\CGUI.cpp" />
     <ClCompile Include="GUI\CKeyboard.cpp" />
     <ClCompile Include="GUI\CListBox.cpp" />
@@ -215,7 +212,6 @@
     <ClCompile Include="GUI\CScrollBar.cpp" />
     <ClCompile Include="GUI\CText.cpp" />
     <ClCompile Include="GUI\CTextBox.cpp" />
-    <ClCompile Include="GUI\CTexture.cpp" />
     <ClCompile Include="GUI\CTimer.cpp" />
     <ClCompile Include="GUI\CTrackBar.cpp" />
     <ClCompile Include="GUI\CVar.cpp" />

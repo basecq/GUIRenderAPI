@@ -9,7 +9,7 @@ class CTexture
 
 	ID3DXSprite * m_pSprite;
 	IDirect3DDevice9 * m_pDevice;
-	CColor *m_pColor;
+
 	SIMPLEGUI_CHAR *tPath;
 public:
 	~CTexture();

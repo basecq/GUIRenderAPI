@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "Define.h"
 
 #include "Texture.h"
 
