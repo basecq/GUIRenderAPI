@@ -17,6 +17,8 @@ CDialog::CDialog ( IDirect3DDevice9 *pDevice )
 		m_pRender->Initialize ( pDevice );
 
 	m_pMouse = new CMouse ( this );
+	if( !m_pMouse )
+		MessageBox ( 0, _UI ( "Error for creating mouse (CMouse::CMouse)." ), 0, 0 );
 
 	m_bVisible = true;
 }
@@ -260,20 +262,20 @@ CListBox *CDialog::AddListBox ( CWindow *pWindow, int X, int Y, int Width, int H
 
 CListView *CDialog::AddListView ( CWindow *pWindow, int X, int Y, int Width, int Height, const SIMPLEGUI_CHAR *szString, tAction Callback )
 {
-	CListView* pListBiew = new CListView ( this );
+	CListView* pListView = new CListView ( this );
 
-	if ( pListBiew )
+	if ( pListView )
 	{
-		pListBiew->SetPos ( CPos ( X, Y ) );
-		pListBiew->SetSize ( Width, Height );
-		pListBiew->SetAction ( Callback );
-		pListBiew->SetFont ( this->GetFont () );
+		pListView->SetPos ( CPos ( X, Y ) );
+		pListView->SetSize ( Width, Height );
+		pListView->SetAction ( Callback );
+		pListView->SetFont ( this->GetFont () );
 
 		if ( pWindow )
-			pWindow->AddControl ( pListBiew );
+			pWindow->AddControl ( pListView );
 	}
 
-	return pListBiew;
+	return pListView;
 }
 
 //--------------------------------------------------------------------------------------
@@ -295,26 +297,6 @@ CLogBox *CDialog::AddTextBox ( CWindow *pWindow, int X, int Y, int Width, int He
 	return pTextBox;
 }
 
-/*//--------------------------------------------------------------------------------------
-CListView *CDialog::AddListView ( CWindow *pWindow, int X, int Y, int Width, int Height, int Columns, const SIMPLEGUI_CHAR *szString, tAction Callback )
-{
-	CListView* pListView = new CListView ( this );
-
-	if ( pListView )
-	{
-		pListView->SetPos ( CPos ( X, Y ) );
-		//pListView->SetSize ( Width, Height );
-		pListView->SetText ( szString );
-		pListView->SetAction ( Callback );
-		pListView->SetFont ( this->GetFont () );
-
-		if ( pWindow )
-			pWindow->AddControl ( pListView );
-	}
-
-	return pListView;
-}
-*/
 //--------------------------------------------------------------------------------------
 CLabel *CDialog::AddLabel ( CWindow *pWindow, int X, int Y, int Width, int Height, const SIMPLEGUI_CHAR *szString, tAction Callback )
 {
@@ -549,7 +531,6 @@ void CDialog::MsgProc ( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		if ( pControl &&
 			 ( pControl->GetType () == CControl::TYPE_DROPDOWN ) )
 		{
-
 			m_pFocussedWindow->OnMouseMove ( pControl, uMsg );
 
 			// Let then give it the first chance at handling keyboard.
@@ -631,22 +612,26 @@ void CDialog::MsgProc ( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					}
 				}
 
+				m_pFocussedWindow->HandleMouse ( uMsg, pos, wParam, lParam );
 				// If the window is not always on top, and it's enabled, then give
 				// it the first chance at handling the message.
-				if ( !( pWindow && pWindow->GetAlwaysOnTop () ) &&
+				if ( ( pWindow && pWindow->GetAlwaysOnTop () ) &&
 					 m_pFocussedWindow->IsEnabled () )
 				{
-					if ( m_pFocussedWindow->HandleMouse ( uMsg, pos, wParam, lParam ) )
-						return;
-				}
-				else
-				{			
+					//if ( m_pFocussedWindow->HandleMouse ( uMsg, pos, wParam, lParam ) )
+					//	return;
+		
+				
+				//else
+				//{			
 					// If the window is in focus, and if the mouse is outside the window, then leave 
 					// the click event
 					if ( uMsg == WM_LBUTTONUP )
 					{
-						if ( m_pFocussedWindow->OnClickEvent () )
-							m_pFocussedWindow->OnClickLeave ();
+						//if ( m_pFocussedWindow->OnClickEvent () )
+							m_pFocussedWindow->OnClickLeave (); 
+							m_pFocussedWindow->OnFocusOut (); 
+							m_pFocussedWindow = NULL;
 					}
 				}
 			}
@@ -669,8 +654,10 @@ void CDialog::MsgProc ( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					{
 						pControl->OnClickLeave ();
 					}
-				}
 
+					//m_pFocussedWindow->HandleMouse ( uMsg, pos, wParam, lParam );
+				}
+				
 				if ( pWindow->HandleMouse ( uMsg, pos, wParam, lParam ) )
 					return;
 			}
@@ -715,8 +702,10 @@ void CDialog::MsgProc ( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				if ( m_pMouseOverWindow )
 				{
 					m_pMouseOverWindow->OnMouseLeave ();
+				
 					//m_pMouseOverWindow->ClearControlFocus ();
 				}
+
 				// Handle mouse entering the new window
 				m_pMouseOverWindow = pWindow;
 				if ( pWindow != NULL )

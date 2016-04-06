@@ -523,8 +523,8 @@ bool CWindow::ControlMessages ( UINT uMsg, CPos pos, WPARAM wParam, LPARAM lPara
 	if ( !CControl::CanHaveFocus () ||
 		 m_eWindowArea != CLEAR ||
 		 m_pScrollbar->ContainsRect ( pos ) ||
-		 !CControl::ContainsRect ( pos ) ||
-		 m_rTitle.InControlArea ( pos ) )
+		 !CControl::ContainsRect ( pos ) /*||
+		 m_rTitle.InControlArea ( pos )*/ )
 	{
 		return false;
 	}
@@ -999,7 +999,7 @@ bool CWindow::ContainsRect ( CPos pos )
 			return true;
 	}
 
-	return ( (m_pScrollbar->ContainsRect ( pos ) && m_eWindowArea == CLEAR)||
+	return ( ( m_pScrollbar->ContainsRect ( pos ) && m_eWindowArea == CLEAR ) ||
 			 ( m_rBoundingBox.InControlArea ( pos ) && !m_bMaximized ) ||
 			 m_rTitle.InControlArea ( pos ) ||
 			 m_rButton.InControlArea ( pos ) );

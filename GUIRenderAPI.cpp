@@ -253,11 +253,11 @@ VOID Init ()
 
 	auto pScrolls = pGui->AddScrollBarHorizontal ( fServBrowser1, 300, 200, 200, 18, 0, 20, 15, 199 );
 
-	fServBrowser1->SetAlwaysOnTop ( false );
+	fServBrowser->SetAlwaysOnTop ( true );
 
 	auto pLabel = pGui->AddLabel ( fServBrowser1, 400, 400, 300, 200, "Great Text asd sChanched" );
 
-	auto list = pGui->AddListView ( fServBrowser1, 100, 100, 500, 200, "as" );
+	auto list = pGui->AddListView ( fServBrowser, 100, 100, 500, 200, "as" );
 
 	list->AddColumn ( "chassd ASDSAD ASD ASDSASD SADS", 100 );
 	list->AddColumn ( "chassd 1", 100 );
