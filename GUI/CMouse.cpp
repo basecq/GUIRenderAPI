@@ -182,23 +182,13 @@ CMouse::CMouse ( CDialog *pDialog )
 		g_pState->Initialize ( m_pDialog->GetDevice () );
 	*/
 
-	m_pTexture [ DEFAULT ] = new CD3DTexture ( "FMPGUI/Untitled-2.png" );
-	m_pTexture [ DEFAULT ]->Initialize ( pDialog->GetDevice () );
+	m_pDialog->LoadTexture ( "FMPGUI/Untitled-2.png", &m_pTexture [ DEFAULT ] );
+	m_pDialog->LoadTexture ( "FMPGUI/Semtulo-3.png", &m_pTexture [ E_RESIZE ] );
+	m_pDialog->LoadTexture ( "FMPGUI/Semtulo-4.png", &m_pTexture [ NE_RESIZE ] );
+	m_pDialog->LoadTexture ("FMPGUI/Semtulo-2.png", &m_pTexture [ S_RESIZE ] );
+	m_pDialog->LoadTexture ( "FMPGUI/Semtulo-1.png", &m_pTexture [ SE_RESIZE ] );
+	m_pDialog->LoadTexture (  "FMPGUI/move_cursor.png", &m_pTexture [ MOVE ] );
 
-	m_pTexture [ E_RESIZE ] = new CD3DTexture ( "FMPGUI/Semtulo-3.png" ); 
-	m_pTexture [ E_RESIZE ]->Initialize ( pDialog->GetDevice () );
-
-	m_pTexture [ NE_RESIZE ] = new CD3DTexture (  "FMPGUI/Semtulo-4.png" );
-	m_pTexture [ NE_RESIZE ]->Initialize ( pDialog->GetDevice () );
-
-	m_pTexture [ S_RESIZE ] = new CD3DTexture (  "FMPGUI/Semtulo-2.png" ); 
-	m_pTexture [ S_RESIZE ]->Initialize ( pDialog->GetDevice () );
-
-	m_pTexture [ SE_RESIZE ] = new CD3DTexture ( "FMPGUI/Semtulo-1.png"  ); 
-	m_pTexture [ SE_RESIZE ]->Initialize ( pDialog->GetDevice () );
-
-	m_pTexture [ MOVE ] = new CD3DTexture ( "FMPGUI/move_cursor.png" );
-	m_pTexture [ MOVE ]->Initialize ( pDialog->GetDevice () );
 
 	/*g_pTexture[ DEFAULT ].Init ( pDialog->GetDevice (),"FMPGUI/Untitled-2.png" );
 	g_pTexture [ E_RESIZE ].Init ( pDialog->GetDevice (), "FMPGUI/Semtulo-3.png" );

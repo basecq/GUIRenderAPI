@@ -62,12 +62,12 @@ void CDialog::LoadFont ( const SIMPLEGUI_CHAR *szFontName, DWORD dwHeight, bool 
 //--------------------------------------------------------------------------------------
 void CDialog::LoadTexture ( const SIMPLEGUI_CHAR *szPath, CD3DTexture **ppCreated )
 {
-	CD3DTexture *pTexture = new CD3DTexture ( m_pDevice );
+	CD3DTexture *pTexture = new CD3DTexture ( szPath );
 
 	if ( !pTexture )
 		return;
 
-	if ( FAILED ( pTexture->CreateTextureFromFile ( szPath ) ) )
+	if ( FAILED ( pTexture->Initialize ( m_pDevice ) ) )
 		return;
 
 	if ( ppCreated != NULL )
@@ -79,17 +79,22 @@ void CDialog::LoadTexture ( const SIMPLEGUI_CHAR *szPath, CD3DTexture **ppCreate
 //--------------------------------------------------------------------------------------
 void CDialog::LoadTexture ( LPCVOID pSrc, UINT uSrcSize, CD3DTexture **ppCreated )
 {
-	CD3DTexture *pTexture = new CD3DTexture ( m_pDevice );
+	CD3DTexture *pTexture = new CD3DTexture ( pSrc, uSrcSize );
 	if ( !pTexture )
 		return;
 
-	if ( FAILED ( pTexture->CreateTextureFromMemory ( pSrc, uSrcSize ) ) )
+	if ( FAILED ( pTexture->Initialize ( m_pDevice ) ) )
 		return;
 
 	if ( ppCreated != NULL )
 		*ppCreated = pTexture;
 
 	m_vTexture.push_back ( pTexture );
+}
+
+void CDialog::RemoveTexture ( CD3DTexture *pTexture )
+{
+	m_vTexture.erase ( std::find ( m_vTexture.begin (), m_vTexture.end (), pTexture ) );
 }
 
 //--------------------------------------------------------------------------------------

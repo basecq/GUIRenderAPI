@@ -287,11 +287,11 @@ void CControl::SetTexture ( const TCHAR *szPath )
 	if ( !m_pDialog )
 		return;
 
-	// Check if there is already a texture, otherwise re-create it
+	// Check if there is already a texture
 	if ( m_pTexture )
-		m_pTexture->CreateTextureFromFile ( szPath );
-	else
-		m_pDialog->LoadTexture ( szPath, &m_pTexture );
+		m_pDialog->RemoveTexture ( m_pTexture );
+
+	m_pDialog->LoadTexture ( szPath, &m_pTexture );
 }
 
 void CControl::SetTexture ( LPCVOID pSrc, UINT uSrcSize )
@@ -299,11 +299,11 @@ void CControl::SetTexture ( LPCVOID pSrc, UINT uSrcSize )
 	if ( !m_pDialog )
 		return;
 
-	// Check if there is already a texture, otherwise re-create it
+	// Check if there is already a texture
 	if ( m_pTexture )
-		m_pTexture->CreateTextureFromMemory ( pSrc, uSrcSize );
-	else
-		m_pDialog->LoadTexture ( pSrc, uSrcSize, &m_pTexture );
+		m_pDialog->RemoveTexture ( m_pTexture );
+
+	m_pDialog->LoadTexture ( pSrc, uSrcSize, &m_pTexture );
 }
 
 CD3DTexture *CControl::GetTexture ( void )

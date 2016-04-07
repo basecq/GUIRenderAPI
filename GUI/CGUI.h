@@ -111,13 +111,13 @@ public:
 	CScrollBarVertical *AddScrollBar ( CWindow *pWindow, int X, int Y, int Width, int Height, int nMin, int nMax, int nPagSize, int nValue, tAction Callback = NULL );
 	CScrollBarHorizontal *AddScrollBarHorizontal ( CWindow *pWindow, int X, int Y, int Width, int Height, int nMin, int nMax, int nPagSize, int nValue, tAction Callback = NULL );
 
-	void LoadTexture ( const TCHAR *szPath, CD3DTexture **ppCreated = NULL );
+	void LoadTexture ( const SIMPLEGUI_CHAR *szPath, CD3DTexture **ppCreated = NULL );
 	void LoadTexture ( LPCVOID pSrc, UINT uSrcSize, CD3DTexture **ppCreated = NULL );
+	void RemoveTexture ( CD3DTexture *pTexture );
 
 	void LoadFont ( const SIMPLEGUI_CHAR *szFontName, DWORD dwHeight = 15, bool bBold = false, CD3DFont **ppCreated = NULL );
-	void LoadInterfaceFromFile ( const SIMPLEGUI_CHAR * pszFilePath, const SIMPLEGUI_CHAR * dir = _UI ( "" ) );
 
-	void DrawFont ( SControlRect &rect, DWORD dwColor, const TCHAR* szText, DWORD dwFlags, CD3DFont *pFont = NULL );
+	void DrawFont ( SControlRect &rect, DWORD dwColor, const SIMPLEGUI_CHAR* szText, DWORD dwFlags, CD3DFont *pFont = NULL );
 	void DrawBox ( SControlRect &rect, D3DCOLOR d3dColor, D3DCOLOR d3dColorOutline, bool bAntAlias = true );
 	void DrawTriangle ( SControlRect &rect, float fAngle, D3DCOLOR d3dColor, D3DCOLOR d3dColorOutline, bool bAntAlias = true );
 	void DrawCircle ( SControlRect &rect, D3DCOLOR d3dColor, D3DCOLOR d3dColorOutline, bool bAntAlias = true );

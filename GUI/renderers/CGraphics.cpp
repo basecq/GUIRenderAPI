@@ -262,10 +262,10 @@ void CGraphics::CreateD3DRender ( int ID, int iNumVertices )
 
 void CGraphics::CreateD3DTexture ( int ID, const TCHAR *pszPath )
 {
-	CD3DTexture *pTexture = new CD3DTexture ( m_pd3dDevice );
+	CD3DTexture *pTexture = new CD3DTexture ( pszPath );
 	
 	if ( pTexture )
-		pTexture->CreateTextureFromFile ( pszPath );
+		pTexture->Initialize ( m_pd3dDevice );
 
 	SItem sItem;
 	sItem.pTexture = pTexture;
@@ -338,7 +338,7 @@ void CGraphics::OnLostDevice ( void )
 		else if ( m_ItemAddon [ i ].pRender )
 			m_ItemAddon [ i ].pRender->Invalidate ();
 		else if ( m_ItemAddon [ i ].pTexture )
-			m_ItemAddon [ i ].pTexture->OnResetDevice ();
+			m_ItemAddon [ i ].pTexture->Invalidate ();
 	}
 }
 
@@ -346,12 +346,12 @@ void CGraphics::OnResetDevice ( void )
 {
 	for ( size_t i = 0; i < m_ItemAddon.size (); i++ )
 	{
-		if ( m_ItemAddon [ i ].pFont )	
-			m_ItemAddon [ i ].pFont->Initialize ( m_pd3dDevice );				
+		if ( m_ItemAddon [ i ].pFont )
+			m_ItemAddon [ i ].pFont->Initialize ( m_pd3dDevice );
 		else if ( m_ItemAddon [ i ].pRender )
 			m_ItemAddon [ i ].pRender->Initialize ( m_pd3dDevice );
 		else if ( m_ItemAddon [ i ].pTexture )
-			m_ItemAddon [ i ].pTexture->OnLostDevice ();
+			m_ItemAddon [ i ].pTexture->Initialize ( m_pd3dDevice );
 	}
 }
 
@@ -1251,6 +1251,8 @@ CD3DTexture::CD3DTexture ( const TCHAR *szPath ) :
 	m_szPath = new TCHAR [ strlen ( szPath ) ];
 	strcpy ( m_szPath, szPath );
 #endif
+
+	m_pState = new CD3DStateBlock ();
 }
 
 CD3DTexture::CD3DTexture ( LPCVOID pSrc, UINT uSrcSize ) :
@@ -1258,6 +1260,8 @@ CD3DTexture::CD3DTexture ( LPCVOID pSrc, UINT uSrcSize ) :
 {
 	m_pSrc = pSrc;
 	m_uSrcSize = uSrcSize;
+
+	m_pState = new CD3DStateBlock ();
 }
 
 CD3DTexture::~CD3DTexture ( void )
@@ -1267,10 +1271,11 @@ CD3DTexture::~CD3DTexture ( void )
 
 HRESULT CD3DTexture::Initialize ( LPDIRECT3DDEVICE9 pd3dDevice )
 {
+	m_pDevice = pd3dDevice;
+
+	
 	if ( m_pState )
 		m_pState->Initialize ( m_pDevice );
-
-	m_pDevice = pd3dDevice;
 
 	HRESULT hr;
 
@@ -1344,7 +1349,7 @@ void CD3DTexture::Draw ( float fX, float fY, float fScaleX, float fScaleY,
 	vertices [ 0 ].v = 0.0f;
 
 	vertices [ 1 ].colour = d3dColor;
-	vertices [ 1 ].x = fScaleX - 0.5f;
+	vertices [ 1 ].x = fScaleX + fX - 0.5f;
 	vertices [ 1 ].y = fY - 0.5f;
 	vertices [ 1 ].z = 0.0f;
 	vertices [ 1 ].rhw = 1.0f;
@@ -1352,8 +1357,8 @@ void CD3DTexture::Draw ( float fX, float fY, float fScaleX, float fScaleY,
 	vertices [ 1 ].v = 0.0f;
 
 	vertices [ 2 ].colour = d3dColor;
-	vertices [ 2 ].x = fScaleX - 0.5f;
-	vertices [ 2 ].y = fScaleY - 0.5f;
+	vertices [ 2 ].x = fScaleX + fX - 0.5f;
+	vertices [ 2 ].y = fScaleY + fY - 0.5f;
 	vertices [ 2 ].z = 0.0f;
 	vertices [ 2 ].rhw = 1.0f;
 	vertices [ 2 ].u = 1.0f;
@@ -1361,7 +1366,7 @@ void CD3DTexture::Draw ( float fX, float fY, float fScaleX, float fScaleY,
 
 	vertices [ 3 ].colour = d3dColor;
 	vertices [ 3 ].x = fX - 0.5f;
-	vertices [ 3 ].y = fScaleY - 0.5f;
+	vertices [ 3 ].y = fScaleY + fY - 0.5f;
 	vertices [ 3 ].z = 0.0f;
 	vertices [ 3 ].rhw = 1.0f;
 	vertices [ 3 ].u = 0.0f;
