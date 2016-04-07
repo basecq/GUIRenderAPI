@@ -846,7 +846,7 @@ void CDialog::OnLostDevice ( void )
 	EnterCriticalSection ( &cs );
 
 	for ( size_t i = 0; i < m_vTexture.size (); i++ )
-		SAFE_LOSTDEVICE ( m_vTexture [ i ] );
+		SAFE_INVALIDATE ( m_vTexture [ i ] );
 
 	for ( size_t i = 0; i < m_vFont.size (); i++ )
 		SAFE_INVALIDATE ( m_vFont [ i ] );
@@ -862,7 +862,7 @@ void CDialog::OnResetDevice ( void )
 	EnterCriticalSection ( &cs );
 
 	for ( size_t i = 0; i < m_vTexture.size (); i++ )
-		SAFE_RESETDEVICE ( m_vTexture [ i ] );
+		SAFE_INITIALIZE ( m_vTexture [ i ], m_pDevice );
 
 	for ( size_t i = 0; i < m_vFont.size (); i++ )
 		SAFE_INITIALIZE ( m_vFont [ i ], m_pDevice );

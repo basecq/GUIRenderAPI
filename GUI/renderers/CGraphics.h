@@ -161,7 +161,7 @@ public:
 	// Initializing and destroying device-dependent objects
 	HRESULT Initialize ( LPDIRECT3DDEVICE9 pd3dDevice );
 	
-	HRESULT Invalidate ();
+	HRESULT Invalidate ( void );
 
 	void SetWidth ( float fWidth ) { m_fWidth = fWidth; };
 
@@ -174,26 +174,32 @@ public:
 class CD3DTexture
 {
 public:
-	CD3DTexture ( IDirect3DDevice9* pd3dDevice );
+	CD3DTexture ( const TCHAR *szPath );
+	CD3DTexture ( LPCVOID pSrc, UINT uSrcSize );
+
 	~CD3DTexture ( void );
 
-	HRESULT CreateTextureFromFile ( const TCHAR *szPath );
-	HRESULT CreateTextureFromMemory ( LPCVOID pSrc, UINT uSrcSize );
+	HRESULT Initialize ( LPDIRECT3DDEVICE9 pd3dDevice );
+	HRESULT Invalidate ( void );
 
 	void Draw ( float fX, float fY, float fScaleX, float fScaleY, float fRotation = 0.f, D3DCOLOR d3dColor = D3DCOLOR_XRGB ( 255, 255, 255 ) );
+	void Draw ( float fX, float fY, D3DCOLOR d3dColor = D3DCOLOR_XRGB ( 255, 255, 255 ) );
 
 	void OnLostDevice ( void );
 	void OnResetDevice ( void );
 
 private:
-	IDirect3DTexture9	*m_pTexture;
+	LPDIRECT3DTEXTURE9      m_pTexture;   // The d3d texture for this font
+	LPDIRECT3DVERTEXBUFFER9 m_pVB;        // VertexBuffer for rendering text
 
-	static ID3DXSprite	*s_pSprite;
-	static size_t		s_tCount;
+	//static ID3DXSprite	*s_pSprite;
+	//static size_t		s_tCount;
 
 	IDirect3DDevice9	*m_pDevice;
 	TCHAR				*m_szPath;
 
 	LPCVOID				m_pSrc;
 	UINT				m_uSrcSize;
+
+	CD3DStateBlock *m_pState;
 };

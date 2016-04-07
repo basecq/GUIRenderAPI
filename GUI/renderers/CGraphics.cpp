@@ -1238,40 +1238,12 @@ void CD3DRender::D3DLine ( float fStartX, float fStartY, float fEndX, float fEnd
 	}
 }
 
-ID3DXSprite	*CD3DTexture::s_pSprite = NULL;
-size_t		CD3DTexture::s_tCount = 0;
+//ID3DXSprite	*CD3DTexture::s_pSprite = NULL;
+//size_t		CD3DTexture::s_tCount = 0;
 
-CD3DTexture::CD3DTexture ( IDirect3DDevice9* pd3dDevice ) :
-	m_pDevice ( pd3dDevice ),
-	m_szPath ( NULL ),
+CD3DTexture::CD3DTexture ( const TCHAR *szPath ) :
 	m_pTexture ( NULL )
 {
-	if ( !s_pSprite )
-		D3DXCreateSprite ( pd3dDevice, &s_pSprite );
-
-	s_tCount++;
-}
-CD3DTexture::~CD3DTexture ( void )
-{
-	if ( --s_tCount == 1 )
-		SAFE_RELEASE ( s_pSprite );
-
-	SAFE_RELEASE ( m_pTexture );
-	SAFE_DELETE_ARRAY ( m_szPath );
-}
-
-HRESULT CD3DTexture::CreateTextureFromFile ( const TCHAR *szPath )
-{
-	if ( !m_pDevice )
-		return E_FAIL;
-
-	D3DCOLOR colorkey = 0xFFFF00FF;
-	if ( FAILED ( D3DXCreateTextureFromFileEx ( m_pDevice, szPath, 0, 0, 1, 0,
-		 D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT,
-		 colorkey, NULL, NULL, &m_pTexture ) ) ) 
-		return E_FAIL;
-
-
 #ifdef _UNICODE
 	m_szPath = new TCHAR [ wcslen ( szPath ) ];
 	wcscpy ( m_szPath, szPath );
@@ -1279,20 +1251,66 @@ HRESULT CD3DTexture::CreateTextureFromFile ( const TCHAR *szPath )
 	m_szPath = new TCHAR [ strlen ( szPath ) ];
 	strcpy ( m_szPath, szPath );
 #endif
+}
+
+CD3DTexture::CD3DTexture ( LPCVOID pSrc, UINT uSrcSize ) :
+	m_pTexture ( NULL )
+{
+	m_pSrc = pSrc;
+	m_uSrcSize = uSrcSize;
+}
+
+CD3DTexture::~CD3DTexture ( void )
+{
+	Invalidate ();
+}
+
+HRESULT CD3DTexture::Initialize ( LPDIRECT3DDEVICE9 pd3dDevice )
+{
+	if ( m_pState )
+		m_pState->Initialize ( m_pDevice );
+
+	m_pDevice = pd3dDevice;
+
+	HRESULT hr;
+
+	//Create vertex buffer and set as stream source
+	hr = m_pDevice->CreateVertexBuffer ( sizeof ( TLVERTEX ) * 4, NULL, D3DFVF_TLVERTEX, D3DPOOL_MANAGED,
+										 &m_pVB, NULL );
+
+	if ( FAILED ( hr ) )
+		return hr;
+
+	if ( m_szPath )
+	{
+		D3DCOLOR colorkey = 0xFFFF00FF;
+		hr = D3DXCreateTextureFromFileEx ( m_pDevice, m_szPath, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED,
+										   D3DX_FILTER_NONE, D3DX_DEFAULT,
+										   colorkey, NULL, NULL, &m_pTexture );
+		if ( FAILED ( hr ) )
+			return hr;
+	}
+	else if ( m_pSrc && 
+			  m_uSrcSize )
+	{
+		hr = D3DXCreateTextureFromFileInMemory ( m_pDevice, m_pSrc, m_uSrcSize, &m_pTexture );
+
+		if ( FAILED ( hr ) )
+			return hr;
+	}
 
 	return S_OK;
 }
 
-HRESULT CD3DTexture::CreateTextureFromMemory ( LPCVOID pSrc, UINT uSrcSize )
+HRESULT CD3DTexture::Invalidate ( void )
 {
-	if ( !m_pDevice )
-		return E_FAIL;
+	SAFE_RELEASE ( m_pVB );
+	SAFE_RELEASE ( m_pTexture );
 
-	if ( FAILED ( D3DXCreateTextureFromFileInMemory ( m_pDevice, pSrc, uSrcSize, &m_pTexture ) ) )
-		return E_FAIL;
+	SAFE_DELETE_ARRAY ( m_szPath );
 
-	m_pSrc = pSrc;
-	m_uSrcSize = uSrcSize;
+	if ( m_pState )
+		m_pState->Invalidate ();
 
 	return S_OK;
 }
@@ -1300,60 +1318,94 @@ HRESULT CD3DTexture::CreateTextureFromMemory ( LPCVOID pSrc, UINT uSrcSize )
 void CD3DTexture::Draw ( float fX, float fY, float fScaleX, float fScaleY,
 						 float fRotation, D3DCOLOR d3dColor )
 {
-	if ( !m_pTexture ||
-		 !s_pSprite )
-	{
+	if ( !m_pState )
 		return;
-	}
 
-	D3DSURFACE_DESC dTextureDesc;
-	m_pTexture->GetLevelDesc ( 0, &dTextureDesc );
+	if ( FAILED ( m_pState->BeginState () ) )
+		return;
 
-	D3DXVECTOR2 vScaling ( 1.f, 1.f );
+	m_pState->SetRenderStates ();
 
-	if ( fScaleX >= 0.f &&
-		 dTextureDesc.Width > 0.f )
-	{
-		vScaling.x = vScaling.x * fScaleX / dTextureDesc.Width;
-	}
+	TLVERTEX* vertices;
 
-	if ( fScaleY >= 0.f &&
-		 dTextureDesc.Height > 0.f )
-	{
-		vScaling.y = vScaling.y * fScaleY / dTextureDesc.Height;
-	}
+	//Lock the vertex buffer
+	m_pVB->Lock ( 0, 0, ( void ** ) &vertices, NULL );
 
-	D3DXMATRIX mMatrix;
+	//Setup vertices
+	//A -0.5f modifier is applied to vertex coordinates to match texture and screen coords
+	//Some drivers may compensate for this automatically, but on others texture alignment errors are introduced
+	//More information on this can be found in the Direct3D 9 documentation
+	vertices [ 0 ].colour = d3dColor;
+	vertices [ 0 ].x = fX - 0.5f;
+	vertices [ 0 ].y = fY - 0.5f;
+	vertices [ 0 ].z = 0.0f;
+	vertices [ 0 ].rhw = 1.0f;
+	vertices [ 0 ].u = 0.0f;
+	vertices [ 0 ].v = 0.0f;
 
-	D3DXVECTOR2 vTrans = D3DXVECTOR2 ( fX, fY );
-	D3DXVECTOR2 vCenter = D3DXVECTOR2 ( vScaling.x * fScaleX / dTextureDesc.Width, vScaling.y * fScaleY / dTextureDesc.Height );
-	D3DXMatrixTransformation2D ( &mMatrix, NULL, NULL, &vScaling, &vCenter, fRotation / ( 180.f / D3DX_PI ), &vTrans );
+	vertices [ 1 ].colour = d3dColor;
+	vertices [ 1 ].x = fScaleX - 0.5f;
+	vertices [ 1 ].y = fY - 0.5f;
+	vertices [ 1 ].z = 0.0f;
+	vertices [ 1 ].rhw = 1.0f;
+	vertices [ 1 ].u = 1.0f;
+	vertices [ 1 ].v = 0.0f;
 
-	s_pSprite->Flush ();
-	s_pSprite->Begin ( D3DXSPRITE_ALPHABLEND | 
-					   D3DXSPRITE_SORT_TEXTURE | 
-					   D3DXSPRITE_SORT_DEPTH_BACKTOFRONT );
+	vertices [ 2 ].colour = d3dColor;
+	vertices [ 2 ].x = fScaleX - 0.5f;
+	vertices [ 2 ].y = fScaleY - 0.5f;
+	vertices [ 2 ].z = 0.0f;
+	vertices [ 2 ].rhw = 1.0f;
+	vertices [ 2 ].u = 1.0f;
+	vertices [ 2 ].v = 1.0f;
 
-	s_pSprite->SetTransform ( &mMatrix );
-	s_pSprite->Draw ( m_pTexture, NULL, NULL, NULL, d3dColor );
-	s_pSprite->End ();
+	vertices [ 3 ].colour = d3dColor;
+	vertices [ 3 ].x = fX - 0.5f;
+	vertices [ 3 ].y = fScaleY - 0.5f;
+	vertices [ 3 ].z = 0.0f;
+	vertices [ 3 ].rhw = 1.0f;
+	vertices [ 3 ].u = 0.0f;
+	vertices [ 3 ].v = 1.0f;
+
+
+	//Unlock the vertex buffer
+	m_pVB->Unlock ();
+	m_pDevice->SetStreamSource ( 0, m_pVB, 0, sizeof ( TLVERTEX ) );
+
+	//Set texture
+	m_pDevice->SetFVF ( D3DFVF_TLVERTEX );
+	m_pDevice->SetTexture ( 0, m_pTexture );
+
+	//Draw image
+	m_pDevice->DrawPrimitive ( D3DPT_TRIANGLEFAN, 0, 2 );
+
+	m_pState->EndState ();
+}
+
+void CD3DTexture::Draw ( float fX, float fY, D3DCOLOR d3dColor )
+{
+	D3DSURFACE_DESC surfaceDesc;
+
+	//Get texture dimensions
+	m_pTexture->GetLevelDesc ( 0, &surfaceDesc );
+	Draw ( fX, fY, surfaceDesc.Width, surfaceDesc.Height, d3dColor );
 }
 
 void CD3DTexture::OnLostDevice ()
 {
-	if ( s_pSprite )
+	/*if ( s_pSprite )
 		s_pSprite->OnLostDevice ();
 
-	SAFE_RELEASE ( m_pTexture );
+	SAFE_RELEASE ( m_pTexture );*/
 }
 
 void CD3DTexture::OnResetDevice ()
 {
-	if ( s_pSprite )
+	/*if ( s_pSprite )
 		s_pSprite->OnResetDevice ();
 
 	if ( m_szPath )
 		CreateTextureFromFile ( m_szPath );
 	else
-		CreateTextureFromMemory ( m_pSrc, m_uSrcSize );
+		CreateTextureFromMemory ( m_pSrc, m_uSrcSize );*/
 }

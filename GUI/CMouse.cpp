@@ -162,39 +162,51 @@ unsigned char rawData [ 508 ] =
 
 
 
-CCTexture g_pTexture[7];
-CD3DStateBlock *g_pState = NULL;
+//CCTexture g_pTexture[7];
+//CD3DStateBlock *g_pState = NULL;
 CMouse::CMouse ( CDialog *pDialog )
 {
 	m_pDialog = pDialog;
 	m_eCursorType = DEFAULT;
+
 	/*pDialog->LoadTexture ( ( LPCVOID ) &rawData, sizeof ( rawData ), &m_pTexture[ DEFAULT ] );
 	pDialog->LoadTexture ( ( LPCVOID ) &rawData1, sizeof ( rawData1 ), &m_pTexture [ E_RESIZE ] );
 	pDialog->LoadTexture ( ( LPCVOID ) &rawData2, sizeof ( rawData2 ), &m_pTexture [ S_RESIZE ] );
 	pDialog->LoadTexture ( ( LPCVOID ) &rawData3, sizeof ( rawData3 ), &m_pTexture [ SE_RESIZE ] );
 	pDialog->LoadTexture ( ( LPCVOID ) &rawData4, sizeof ( rawData4 ), &m_pTexture [ NE_RESIZE ] );*/
 
-	 if ( !g_pState )
+	/* if ( !g_pState )
 		g_pState = new CD3DStateBlock ();
 
 	if ( g_pState )
 		g_pState->Initialize ( m_pDialog->GetDevice () );
+	*/
 
-	g_pTexture[ DEFAULT ].Init ( pDialog->GetDevice (),"FMPGUI/Untitled-2.png" );
+	m_pTexture [ DEFAULT ] = new CD3DTexture ( "FMPGUI/Untitled-2.png" );
+	m_pTexture [ DEFAULT ]->Initialize ( pDialog->GetDevice () );
+
+	m_pTexture [ E_RESIZE ] = new CD3DTexture ( "FMPGUI/Semtulo-3.png" ); 
+	m_pTexture [ E_RESIZE ]->Initialize ( pDialog->GetDevice () );
+
+	m_pTexture [ NE_RESIZE ] = new CD3DTexture (  "FMPGUI/Semtulo-4.png" );
+	m_pTexture [ NE_RESIZE ]->Initialize ( pDialog->GetDevice () );
+
+	m_pTexture [ S_RESIZE ] = new CD3DTexture (  "FMPGUI/Semtulo-2.png" ); 
+	m_pTexture [ S_RESIZE ]->Initialize ( pDialog->GetDevice () );
+
+	m_pTexture [ SE_RESIZE ] = new CD3DTexture ( "FMPGUI/Semtulo-1.png"  ); 
+	m_pTexture [ SE_RESIZE ]->Initialize ( pDialog->GetDevice () );
+
+	m_pTexture [ MOVE ] = new CD3DTexture ( "FMPGUI/move_cursor.png" );
+	m_pTexture [ MOVE ]->Initialize ( pDialog->GetDevice () );
+
+	/*g_pTexture[ DEFAULT ].Init ( pDialog->GetDevice (),"FMPGUI/Untitled-2.png" );
 	g_pTexture [ E_RESIZE ].Init ( pDialog->GetDevice (), "FMPGUI/Semtulo-3.png" );
 	g_pTexture [ NE_RESIZE ].Init ( pDialog->GetDevice (), "FMPGUI/Semtulo-4.png" );
 	g_pTexture [ S_RESIZE ].Init ( pDialog->GetDevice (), "FMPGUI/Semtulo-2.png" );
 	g_pTexture [ SE_RESIZE ].Init ( pDialog->GetDevice (), "FMPGUI/Semtulo-1.png" );
 	g_pTexture [ MOVE ].Init ( pDialog->GetDevice (), "FMPGUI/move_cursor.png" );
-
-	/*pDialog->LoadTexture ( "FMPGUI/Untitled-2.png", &m_pTexture [ DEFAULT ] );
-	pDialog->LoadTexture ( "FMPGUI/Sem Título-3.png", &m_pTexture [ E_RESIZE ] );
-	pDialog->LoadTexture ( "FMPGUI/Sem Título-1.png", &m_pTexture [ NE_RESIZE ] );
-	pDialog->LoadTexture ( "FMPGUI/Sem Título-2.png", &m_pTexture [ S_RESIZE ] );
-	pDialog->LoadTexture ( "FMPGUI/Sem Título-4.png", &m_pTexture [ SE_RESIZE ] );*/
-
-
-
+	*/
 
 	SetSize ( 12 );
 
@@ -304,24 +316,20 @@ bool CMouse::InControlArea ( CControl *pElement, int iHeight )
 
 void CMouse::Draw ()
 {
-	g_pState->BeginState ();
-
 	if ( m_eCursorType == S_RESIZE )
-		g_pTexture [ m_eCursorType ].Blit ( m_Pos.GetX () - 4, m_Pos.GetY () - 8 );
+		m_pTexture [ m_eCursorType ]->Draw ( m_Pos.GetX () - 4, m_Pos.GetY () - 8 );
 	else if ( m_eCursorType == N_RESIZE )
-		g_pTexture [ S_RESIZE ].Blit ( m_Pos.GetX () - 4, m_Pos.GetY () - 10 );
+		m_pTexture [ S_RESIZE ]->Draw ( m_Pos.GetX () - 4, m_Pos.GetY () - 10 );
 	else if ( m_eCursorType == E_RESIZE )
-		g_pTexture [ m_eCursorType ].Blit ( m_Pos.GetX () - 8, m_Pos.GetY () - 4 );
+		m_pTexture [ m_eCursorType ]->Draw ( m_Pos.GetX () - 8, m_Pos.GetY () - 4 );
 	else if ( m_eCursorType == NE_RESIZE )
-		g_pTexture [ m_eCursorType ].Blit ( m_Pos.GetX () - 5, m_Pos.GetY () - 5 );
+		m_pTexture [ m_eCursorType ]->Draw ( m_Pos.GetX () - 5, m_Pos.GetY () - 5 );
 	else if ( m_eCursorType == SE_RESIZE )
-		g_pTexture [ m_eCursorType ].Blit ( m_Pos.GetX () - 6, m_Pos.GetY () - 4 );
+		m_pTexture [ m_eCursorType ]->Draw ( m_Pos.GetX () - 6, m_Pos.GetY () - 4 );
 	else if ( m_eCursorType == MOVE )
-		g_pTexture [ m_eCursorType ].Blit ( m_Pos.GetX () - 5, m_Pos.GetY () - 5 );
+		m_pTexture [ m_eCursorType ]->Draw ( m_Pos.GetX () - 5, m_Pos.GetY () - 5 );
 	else
-		g_pTexture [ m_eCursorType ].Blit ( m_Pos.GetX (), m_Pos.GetY () );
-
-	g_pState->EndState ();
+		m_pTexture [ m_eCursorType ]->Draw ( m_Pos.GetX (), m_Pos.GetY () );
 }
 
 int CMouse::GetLeftButton ( int iState )
